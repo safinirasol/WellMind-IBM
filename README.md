@@ -41,7 +41,7 @@ cd backend
 py -m venv venv
 .\venv\Scripts\activate
 pip install -r requirements.txt
-py app.py
+* AICARE_API_KEY (watsonx / AICare)
 ```
 
 The backend runs on:
@@ -69,8 +69,8 @@ Connection string for the SQLite or other database.
 
 * HEDERA_ACCOUNT_ID
 Your Hedera Testnet account ID.
-
-* HEDERA_PRIVATE_KEY
+* AICARE_API_KEY
+* API key used for the AI chatbot (AICare / watsonx agent).
 Private key for signing Hedera transactions.
 
 * HEDERA_TOPIC_ID
@@ -107,8 +107,9 @@ HEDERA_TOPIC_ID=0.0.7301961
 # Frontend
 REACT_APP_API_URL=http://localhost:5000
 
-#AI CHATBOT
-GEMINI_API_KEY = AIzaSyDy_ZqXxkbyUDAj1Hwfv4j89LVf6226***
+#AI CHATBOT / AICare
+AICARE_API_KEY=your_aicare_api_key_here
+AICARE_URL=https://ap-southeast-1.dl.watson-orchestrate.ibm.com/your_agent_endpoint_here
 
 
 #EMAIL SERVICE

@@ -1,4 +1,12 @@
-# Node / Next.js
+node_modules/
+.next/
+venv/
+.env
+dist/
+__pycache__/
+*.pyc
+/.vscode/
+/.idea/# Node / Next.js
 node_modules/
 .next/
 .vercel/
