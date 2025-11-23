@@ -22,22 +22,22 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault()
   setLoading(true)
   try {
-    // Call Flask backend directly
-    const res = await fetch('http://localhost:5000/api/survey', {
+    // Use Next.js API routes instead of Flask directly
+    const res = await fetch('/api/survey', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
     
     if (!res.ok) {
-      const errorData = await res.json()
+      const errorData = await res.json().catch(() => ({ error: 'Unknown error' }))
       throw new Error(errorData.error || `Server error: ${res.status}`)
     }
     
     const result = await res.json()
     
-    // Get prediction from Flask
-    const predictRes = await fetch('http://localhost:5000/api/predict', {
+    // Get prediction
+    const predictRes = await fetch('/api/predict', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -51,8 +51,8 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     
     push({
       title: 'Survey Submitted',
-      message: `Thank you ${data.name}! Your burnout risk: ${predictResult.risk}. Employee ID: ${result.employee_id}`,
-      type: predictResult.risk === 'High' ? 'error' : predictResult.risk === 'Medium' ? 'info' : 'success'
+      message: `Thank you ${data.name}! Your burnout risk: ${predictResult.risk}. ${predictResult.risk === 'high' ? '📧 Automated wellness email sent!' : ''}`,
+      type: predictResult.risk === 'high' ? 'error' : predictResult.risk === 'medium' ? 'info' : 'success'
     })
     
     // Reset form
@@ -61,7 +61,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
     push({ 
       title: 'Submission error', 
-      message: `Unable to submit survey: ${errorMessage}`, 
+      message: `Unable to submit survey: ${errorMessage}. Please ensure the backend is running.`, 
       type: 'error' 
     })
     console.error('Form submission error:', err)

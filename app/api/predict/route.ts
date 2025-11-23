@@ -1,5 +1,6 @@
 // api/predict/route.ts - Updated version
 import { NextResponse } from 'next/server'
+import { triggerNotificationIfNeeded } from '../../../lib/autoNotification'
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +18,22 @@ export async function POST(req: Request) {
     }
     
     const result = await flaskResponse.json()
+
+    // 🤖 AUTOMATED NOTIFICATION: Check if high risk and notify (non-blocking)
+    if (result.risk === 'high') {
+      console.log('🚨 High burnout risk detected, triggering automated notification...');
+      
+      // Trigger automated email notification in background (don't await)
+      triggerNotificationIfNeeded({
+        id: body.email || `user_${Date.now()}`,
+        name: body.name,
+        email: body.email,
+        department: body.department || 'Unknown',
+        burnoutRisk: 'high',
+      }).catch(notifyError => {
+        console.error('❌ Automated notification failed:', notifyError);
+      });
+    }
 
     // Your existing Watson & Hedera code here...
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'

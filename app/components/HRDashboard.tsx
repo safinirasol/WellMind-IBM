@@ -118,16 +118,25 @@ export default function HRDashboard() {
 
     setSendingEmail(employeeId)
     try {
+      // DEMO MODE: Skip actual email sending
+      console.log(`📧 [DEMO] Would send wellness email to ${employeeName} (${employeeEmail})`);
+      
+      // Simulate delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Uncomment below to enable real email sending (requires GMAIL_APP_PASSWORD in .env):
+      /*
       const res = await fetch('/api/employees/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employeeId, employeeName, employeeEmail }),
       })
-      if (res.ok) {
-        addToast('success', 'Email Sent', `Burnout advisory email sent to ${employeeName}`, 5000)
-      } else {
-        addToast('error', 'Failed to Send Email', 'Please try again later', 5000)
+      if (!res.ok) {
+        throw new Error('Email API failed');
       }
+      */
+      
+      addToast('success', 'Email Sent (Demo)', `Wellness email logged for ${employeeName}`, 5000)
     } catch (error) {
       console.error('Error sending email:', error)
       addToast('error', 'Error', 'An error occurred while sending the email', 5000)
